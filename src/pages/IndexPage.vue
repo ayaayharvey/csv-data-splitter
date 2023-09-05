@@ -37,6 +37,7 @@ const file = ref(null);
 const progress = ref(0);
 const csvChunks = reactive([]);
 const done = ref(false);
+let headers = null;
 
 const handleFileUpload = () => {
   // Handle the file change event here if needed
@@ -95,7 +96,7 @@ const splitFile = async () => {
     progress.value = (currentChunk / numberOfChunks) * 100;
 
     // Convert chunk data to CSV format
-    const csvData = await convertToCsv(chunk);
+    const csvData = await convertToCsv(chunk, currentChunk);
 
     // Generate a file name with an indicator and without the extension (e.g., originalFileName_part1.csv)
     const fileName = `${originalFileNameWithoutExtension}_part${currentChunk}.csv`;
@@ -118,12 +119,24 @@ const splitFile = async () => {
   console.log("File splitting complete!");
 };
 
-const convertToCsv = (chunk) => {
+const convertToCsv = (chunk, currentChunk) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onload = (event) => {
-      const csvData = event.target.result;
+      var csvData = event.target.result;
+      if (currentChunk == 1) {
+        const lines = csvData.trim().split("\n");
+        if (lines.length > 1) {
+          headers = lines.shift().split(",");
+          // csvData = lines.join("\n");
+        }
+
+        // console.log("paosk");
+      } else if (headers) {
+        // If headers exist, prepend them to the CSV data
+        csvData = `${headers.join(",")}\n${csvData}`;
+      }
       resolve(csvData);
     };
 
