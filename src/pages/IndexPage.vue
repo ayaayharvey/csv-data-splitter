@@ -68,25 +68,29 @@ const generateCsvBlobUrl = (csvData) => {
 const splitFile = async () => {
   if (!file.value) return;
 
-  const chunkSize = 50 * 1024 * 1024; // 50MB
+  const maxChunkSize = 50 * 1024 * 1024; // 50MB
+  const minChunkSize = 45 * 1024 * 1024; // 45MB
 
-  const numberOfChunks = Math.ceil(file.value.size / chunkSize);
+  const numberOfChunks = Math.ceil(file.value.size / maxChunkSize);
   let currentChunk = 0;
   let offset = 0;
+  let remainingData = file.value.size;
 
   // Remove the file extension from the original file name
   const originalFileNameWithoutExtension = file.value.name.replace(/\.[^/.]+$/, "");
 
   while (currentChunk < numberOfChunks) {
     done.value = false;
+
+    // Calculate the chunk size for this iteration
+    const chunkSize = Math.min(maxChunkSize, remainingData);
     const chunk = file.value.slice(offset, offset + chunkSize);
-    // Here, you can do something with each chunk, such as upload it to a server.
-    console.log(`Uploading chunk ${currentChunk + 1} / ${numberOfChunks}`);
 
     // Simulate uploading with a delay (remove this in production).
     await simulateUpload(chunk);
 
     offset += chunkSize;
+    remainingData -= chunkSize;
     currentChunk++;
     progress.value = (currentChunk / numberOfChunks) * 100;
 
@@ -96,9 +100,16 @@ const splitFile = async () => {
     // Generate a file name with an indicator and without the extension (e.g., originalFileName_part1.csv)
     const fileName = `${originalFileNameWithoutExtension}_part${currentChunk}.csv`;
     console.log("fileName: ", fileName);
+
     // Store CSV data, name, and size for display and download
     csvChunks.push({ name: fileName, size: chunk.size, data: csvData });
+
+    // If there is less than 45MB remaining data, finish the last file
+    // if (remainingData <= minChunkSize) {
+    //   break;
+    // }
   }
+
   done.value = true;
   Notify.create({
     type: "positive",
