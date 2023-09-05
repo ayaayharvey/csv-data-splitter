@@ -1,0 +1,55 @@
+@font-face {
+  font-family: "poppins";
+  src: url(./fonts/Poppins-Regular.woff);
+}
+@font-face {
+  font-family: "poppins-semibold";
+  src: url(./fonts/Poppins-SemiBold.woff);
+}
+
+.poppins {
+  font-family: "poppins";
+}
+.poppins-semibold {
+  font-family: "poppins-semibold";
+}
+
+$primary-color: #388e3c;
+$secondary-color: #f7f8fa;
+$secondary-dark-color: #757575;
+$danger-color: #757575;
+
+.text-primary {
+  color: $primary-color !important;
+}
+.text-secondary {
+  color: $secondary-color !important;
+}
+.text-secondary-dark {
+  color: $secondary-dark-color !important;
+}
+
+.bg-primary {
+  background-color: $primary-color !important;
+}
+.bg-secondary {
+  background-color: $secondary-color !important;
+}
+.bg-secondary-dark {
+  color: $secondary-dark-color !important;
+}
+
+.template-default {
+}
+
+.floating-actions {
+  position: absolute;
+  left: 0; // Position the button at the leftmost side
+  top: 0; // Adjust the top position as needed
+
+  // Add styling for the button
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
