@@ -69,8 +69,8 @@ const generateCsvBlobUrl = (csvData) => {
 const splitFile = async () => {
   if (!file.value) return;
 
-  const maxChunkSize = 50 * 1024 * 1024; // 50MB
-  const minChunkSize = 45 * 1024 * 1024; // 45MB
+  const maxChunkSize = 30 * 1024 * 1024; // 50MB
+  // const minChunkSize = 45 * 1024 * 1024; // 45MB
 
   const numberOfChunks = Math.ceil(file.value.size / maxChunkSize);
   let currentChunk = 0;
